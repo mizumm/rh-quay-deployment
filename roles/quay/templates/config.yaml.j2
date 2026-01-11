@@ -1,0 +1,25 @@
+BUILDLOGS_REDIS:
+    host: {{ server_hostname }}
+    password: {{ redis_password }}
+    port: 6379
+CREATE_NAMESPACE_ON_PUSH: true
+DATABASE_SECRET_KEY: {{ database_secret_key }}
+DB_URI: postgresql://{{ quay_user }}:{{ quay_password }}@{{ server_hostname }}:5432/{{ quay_database_name }}
+DISTRIBUTED_STORAGE_CONFIG:
+    default:
+        - LocalStorage
+        - storage_path: /datastorage/registry
+DISTRIBUTED_STORAGE_DEFAULT_LOCATIONS: []
+DISTRIBUTED_STORAGE_PREFERENCE:
+    - default
+FEATURE_MAILING: false
+FEATURE_USER_INITIALIZE: true
+SECRET_KEY: {{ secret_key }}
+SERVER_HOSTNAME: {{ server_hostname }}
+SETUP_COMPLETE: true
+SUPER_USERS:
+  - quayadmin
+USER_EVENTS_REDIS:
+    host: {{ server_hostname }}
+    password: {{ redis_password }}
+    port: 6379

@@ -1,0 +1,35 @@
+---
+# General settings
+quay_user: "quayuser"
+quay_password: "quaypass"
+quay_admin_password: "adminpass"
+quay_database_name: "quay"
+quay_admin_email: "quayadmin@example.com"
+redis_password: "strongpassword"
+
+# Registry Authentication (registry.redhat.io)
+# These should ideally be vaulted or passed as extra vars
+registry_username: "{{ lookup('env', 'REDHAT_REGISTRY_USERNAME') | default('your_username') }}"
+registry_password: "{{ lookup('env', 'REDHAT_REGISTRY_PASSWORD') | default('your_password') }}"
+
+# Paths
+quay_base_dir: "/home/stack/quay-install"
+quay_config_dir: "{{ quay_base_dir }}/config"
+quay_storage_dir: "{{ quay_base_dir }}/storage"
+quay_postgres_dir: "{{ quay_base_dir }}/postgres-quay"
+
+# Server info
+server_hostname: "localhost"
+server_ip: "127.0.0.1"
+quay_http_port: 80
+quay_https_port: 443
+
+# Secrets
+# You can generate new keys using `uuidgen`
+secret_key: "CHANGE_ME_TO_A_SECURE_UUID"
+database_secret_key: "CHANGE_ME_TO_A_SECURE_UUID"
+
+# Versions
+postgresql_image: "registry.redhat.io/rhel9/postgresql-15"
+redis_image: "registry.redhat.io/rhel9/redis-6:latest"
+quay_image: "registry.redhat.io/quay/quay-rhel9:v3.16.0"

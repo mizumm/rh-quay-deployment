@@ -1,0 +1,11 @@
+---
+- name: Run Redis container
+  containers.podman.podman_container:
+    name: redis
+    image: "{{ redis_image }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "6379:6379"
+    env:
+      REDIS_PASSWORD: "{{ redis_password }}"

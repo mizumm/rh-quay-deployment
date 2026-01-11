@@ -1,0 +1,43 @@
+---
+- name: Install Podman
+  dnf:
+    name: podman
+    state: present
+
+- name: Install Container Tools
+  dnf:
+    name: "@container-tools"
+    state: present
+  when: ansible_distribution_major_version != "10"
+
+- name: Login to Red Hat Registry
+  containers.podman.podman_login:
+    registry: registry.redhat.io
+    username: "{{ registry_username }}"
+    password: "{{ registry_password }}"
+
+- name: Configure Firewall ports
+  firewalld:
+    port: "{{ item }}"
+    permanent: true
+    state: enabled
+    immediate: true
+  loop:
+    - "{{ quay_http_port }}/tcp"
+    - "{{ quay_https_port }}/tcp"
+    - 5432/tcp
+    - 5433/tcp
+    - 6379/tcp
+  ignore_errors: true # In case firewalld is not running/installed in the container env
+
+- name: Add host entry for Quay server
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ server_ip }} {{ server_hostname }}"
+    state: present
+
+- name: Create Quay base directory
+  file:
+    path: "{{ quay_base_dir }}"
+    state: directory
+    mode: '0755'

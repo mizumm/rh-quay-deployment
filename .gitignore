@@ -1,0 +1,20 @@
+
+# Ansible artifacts
+*.retry
+*.log
+*.j2.swp
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+
+# Editor artifacts
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# Sensitive data (just in case users create local overrides)
+secret_vars.yml
+.env

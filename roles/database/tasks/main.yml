@@ -1,0 +1,44 @@
+---
+- name: Create Postgres data directory
+  file:
+    path: "{{ quay_postgres_dir }}"
+    state: directory
+    mode: '0775'
+
+- name: Set ACL for Postgres directory
+  acl:
+    path: "{{ quay_postgres_dir }}"
+    entity: "26"
+    etype: user
+    permissions: "-wx"
+    state: present
+
+- name: Run PostgreSQL container
+  containers.podman.podman_container:
+    name: postgresql-quay
+    image: "{{ postgresql_image }}"
+    state: started
+    restart_policy: always
+    env:
+      POSTGRESQL_USER: "{{ quay_user }}"
+      POSTGRESQL_PASSWORD: "{{ quay_password }}"
+      POSTGRESQL_DATABASE: "{{ quay_database_name }}"
+      POSTGRESQL_ADMIN_PASSWORD: "{{ quay_admin_password }}"
+    ports:
+      - "5432:5432"
+    volumes:
+      - "{{ quay_postgres_dir }}:/var/lib/pgsql/data:Z"
+
+- name: Wait for PostgreSQL to be ready
+  command: >
+    podman exec postgresql-quay /bin/bash -c "pg_isready -U {{ quay_user }} -d {{ quay_database_name }}"
+  register: postgres_ready
+  until: postgres_ready.rc == 0
+  retries: 20
+  delay: 3
+
+- name: Install pg_trgm extension
+  command: >
+    podman exec postgresql-quay /bin/bash -c 'echo "CREATE EXTENSION IF NOT EXISTS pg_trgm" | psql -d {{ quay_database_name }} -U postgres'
+  # Checking if extension exists to make it idempotent-ish, though the SQL is already safe
+  changed_when: false

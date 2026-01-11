@@ -1,0 +1,72 @@
+---
+- name: Create Quay config directory
+  file:
+    path: "{{ quay_config_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Create Quay storage directory
+  file:
+    path: "{{ quay_storage_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Set ACL for Storage directory
+  acl:
+    path: "{{ quay_storage_dir }}"
+    entity: "1001"
+    etype: user
+    permissions: "-wx"
+    state: present
+
+- name: Generate Quay configuration
+  template:
+    src: config.yaml.j2
+    dest: "{{ quay_config_dir }}/config.yaml"
+  register: quay_config
+
+- name: Run Quay container
+  containers.podman.podman_container:
+    name: quay
+    image: "{{ quay_image }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "{{ quay_http_port }}:8080"
+      - "{{ quay_https_port }}:8443"
+    volumes:
+      - "{{ quay_config_dir }}:/conf/stack:Z"
+      - "{{ quay_storage_dir }}:/datastorage:Z"
+
+- name: Restart Quay if config changed
+  containers.podman.podman_container:
+    name: quay
+    state: started
+    restart: true
+  when: quay_config.changed
+
+- name: Wait for Quay to be ready
+  wait_for:
+    host: "{{ server_hostname }}"
+    port: "{{ quay_http_port }}"
+    delay: 10
+    timeout: 300
+  delegate_to: localhost
+
+- name: Create initial Quay superuser
+  uri:
+    url: "http://{{ server_hostname }}:{{ quay_http_port }}/api/v1/user/initialize"
+    method: POST
+    body_format: json
+    body:
+      username: "quayadmin"
+      password: "{{ quay_admin_password }}"
+      email: "{{ quay_admin_email }}"
+    validate_certs: false
+    # 200: Created
+    # 403: Forbidden (Likely Feature disabled)
+    # 400: Bad Request (Database not empty / User already exists)
+    status_code: [200, 403, 400]
+  register: create_user_result
+  changed_when: create_user_result.status == 200
+  failed_when: create_user_result.status not in [200, 403, 400]

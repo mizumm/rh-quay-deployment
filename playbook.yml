@@ -1,0 +1,12 @@
+---
+- name: Deploy Red Hat Quay POC
+  hosts: quay_servers
+  become: true
+  vars_files:
+    - group_vars/all.yml
+
+  roles:
+    - prerequisites
+    - database
+    - redis
+    - quay
