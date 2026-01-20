@@ -8,7 +8,7 @@
   dnf:
     name: "@container-tools"
     state: present
-  when: ansible_distribution_major_version != "10"
+  when: ansible_distribution_major_version not in ["9", "10"]
 
 - name: Login to Red Hat Registry
   containers.podman.podman_login:
