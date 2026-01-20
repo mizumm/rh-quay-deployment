@@ -56,6 +56,7 @@ Install the necessary Ansible collections:
 
 ```bash
 ansible-galaxy collection install containers.podman
+ansible-galaxy collection install ansible.posix
 ```
 
 Run the Playbook:
