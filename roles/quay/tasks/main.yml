@@ -66,8 +66,12 @@
     # 200: Created
     # 403: Forbidden (Likely Feature disabled)
     # 400: Bad Request (Database not empty / User already exists)
-    status_code: [200, 403, 400]
+    # 404: Not Found (Service starting up)
+    status_code: [200, 403, 400, 404]
   register: create_user_result
   changed_when: create_user_result.status == 200
   failed_when: create_user_result.status not in [200, 403, 400]
+  until: create_user_result.status != 404
+  retries: 10
+  delay: 30
   tags: create_superuser
