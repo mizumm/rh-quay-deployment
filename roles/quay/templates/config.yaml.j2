@@ -15,7 +15,7 @@ DISTRIBUTED_STORAGE_PREFERENCE:
 FEATURE_MAILING: false
 FEATURE_USER_INITIALIZE: true
 SECRET_KEY: {{ secret_key }}
-SERVER_HOSTNAME: {{ server_hostname }}
+SERVER_HOSTNAME: {{ server_hostname }}:{{ quay_http_port }}
 SETUP_COMPLETE: true
 SUPER_USERS:
   - quayadmin
