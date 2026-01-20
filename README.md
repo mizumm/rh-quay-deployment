@@ -72,6 +72,8 @@ Run the Playbook:
 ansible-playbook -i inventory playbook.yml
 ```
 
+*Note: Since the playbook uses `become: true`, you generally do not need to run `ansible-playbook` with `sudo`. However, if your user requires a password for sudo privilege escalation, please use the `-K` (or `--ask-become-pass`) option.*
+
 ## Verification
 
 After deployment is complete, you can verify the operation with the following steps.

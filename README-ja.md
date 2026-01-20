@@ -71,6 +71,8 @@ Playbookを実行します：
 ansible-playbook -i inventory playbook.yml
 ```
 
+*注意: Playbook内で `become: true` を使用しているため、通常 `ansible-playbook` コマンド自体に `sudo` を付与する必要はありません。ただし、実行ユーザーが sudo 昇格にパスワードを必要とする場合は、`-K` (または `--ask-become-pass`) オプションを追加してください。*
+
 ## 確認方法
 
 デプロイ完了後、以下の手順で動作を確認できます。

@@ -70,3 +70,4 @@
   register: create_user_result
   changed_when: create_user_result.status == 200
   failed_when: create_user_result.status not in [200, 403, 400]
+  tags: create_superuser
