@@ -37,8 +37,8 @@ Edit `group_vars/all.yml` to set necessary variables. In particular, the followi
 **Recommended**: Set as environment variables
 
 ```bash
-export REGISTRY_USERNAME="your-rh-username"
-export REGISTRY_PASSWORD="your-rh-password"
+export REDHAT_REGISTRY_USERNAME="your-rh-username"
+export REDHAT_REGISTRY_PASSWORD="your-rh-password"
 ```
 
 Alternatively, you can edit `group_vars/all.yml` directly (not recommended).
@@ -48,7 +48,14 @@ registry_username: "your_username"
 registry_password: "your_password"
 ```
 
-Additionally, change `server_hostname` and `server_ip` according to your environment.
+Additionally, please review and update the following variables in `group_vars/all.yml` as needed:
+
+- `quay_base_dir`
+- `server_hostname`
+- `server_ip`
+- `quay_admin_password`
+- `quay_admin_email`
+- `secret_key` / `database_secret_key`
 
 ## Usage
 

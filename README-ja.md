@@ -37,8 +37,8 @@ localhost ansible_connection=local
 **推奨**: 環境変数として設定する
 
 ```bash
-export REGISTRY_USERNAME="your-rh-username"
-export REGISTRY_PASSWORD="your-rh-password"
+export REDHAT_REGISTRY_USERNAME="your-rh-username"
+export REDHAT_REGISTRY_PASSWORD="your-rh-password"
 ```
 
 または、`group_vars/all.yml` を直接編集して設定することも可能です（非推奨）。
@@ -48,7 +48,14 @@ registry_username: "your_username"
 registry_password: "your_password"
 ```
 
-その他、`server_hostname` や `server_ip` も環境に合わせて変更してください。
+その他、`group_vars/all.yml` 内の以下の変数も環境に合わせて確認・変更してください。
+
+- `quay_base_dir`
+- `server_hostname`
+- `server_ip`
+- `quay_admin_password`
+- `quay_admin_email`
+- `secret_key` / `database_secret_key`
 
 ## 実行方法
 
